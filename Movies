@@ -1,0 +1,51 @@
+DROP TABLE IF EXISTS ACTORS;
+CREATE TABLE ACTORS (
+  id            int,
+  fname         varchar(50),
+  lname         varchar(50),
+  gender        char(1),
+  primary key (id)
+);
+
+DROP TABLE IF EXISTS MOVIE;
+CREATE TABLE MOVIE (
+  id            int,
+  name          varchar(150),
+  year          int,
+  primary key (id)
+);
+
+DROP TABLE IF EXISTS DIRECTORS;
+CREATE TABLE DIRECTORS (
+  id            int,
+  fname         varchar(50),
+  lname         varchar(50),
+  primary key (id)
+);
+
+DROP TABLE IF EXISTS CASTS;
+CREATE TABLE CASTS (
+  pid           int,
+  mid           int,
+  role          varchar(150),
+  primary key (pid, mid, role),
+  foreign key (pid) REFERENCES ACTOR(id),
+  foreign key (mid) REFERENCES MOVIE(id)
+);
+
+DROP TABLE IF EXISTS MOVIE_DIRECTORS;
+CREATE TABLE MOVIE_DIRECTORS (
+  did           int,
+  mid           int,
+  primary key (did, mid),
+  foreign key (mid) REFERENCES MOVIE(id),
+  foreign key (did) REFERENCES DIRECTORS(id)
+);
+
+DROP TABLE IF EXISTS GENRE;
+CREATE TABLE GENRE (
+  mid           int,
+  genre         varchar(75),
+  primary key (mid, genre)
+);
+
