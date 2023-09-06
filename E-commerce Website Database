@@ -1,0 +1,104 @@
+-- Create a table for customers
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Email VARCHAR(100) UNIQUE,
+    Password VARCHAR(255)
+);
+
+-- Create a table for categories
+CREATE TABLE Categories (
+    CategoryID INT PRIMARY KEY,
+    CategoryName VARCHAR(100)
+);
+
+-- Create a table for subcategories
+CREATE TABLE Subcategories (
+    SubcategoryID INT PRIMARY KEY,
+    SubcategoryName VARCHAR(100),
+    CategoryID INT,
+    FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+
+-- Create a table for products
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(255),
+    Description TEXT,
+    Price DECIMAL(10, 2),
+    StockQuantity INT,
+    CategoryID INT,
+    SubcategoryID INT,
+    FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID),
+    FOREIGN KEY (SubcategoryID) REFERENCES Subcategories(SubcategoryID)
+);
+
+-- Create a table for product reviews
+CREATE TABLE ProductReviews (
+    ReviewID INT PRIMARY KEY,
+    ProductID INT,
+    CustomerID INT,
+    Rating INT,
+    Comment TEXT,
+    ReviewDate DATE,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Create a table for shopping carts
+CREATE TABLE ShoppingCart (
+    CartID INT PRIMARY KEY,
+    CustomerID INT,
+    ProductID INT,
+    Quantity INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+-- Create a table for shipping addresses
+CREATE TABLE ShippingAddresses (
+    AddressID INT PRIMARY KEY,
+    CustomerID INT,
+    AddressLine1 VARCHAR(255),
+    AddressLine2 VARCHAR(255),
+    City VARCHAR(100),
+    State VARCHAR(50),
+    PostalCode VARCHAR(20),
+    Country VARCHAR(100),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Create a table for orders
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    OrderDate DATE,
+    TotalAmount DECIMAL(10, 2),
+    ShippingAddressID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (ShippingAddressID) REFERENCES ShippingAddresses(AddressID)
+);
+
+-- Create a table for payment methods
+CREATE TABLE PaymentMethods (
+    PaymentMethodID INT PRIMARY KEY,
+    CustomerID INT,
+    CardNumber VARCHAR(16),
+    ExpiryDate DATE,
+    CVV INT,
+    BillingAddressID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (BillingAddressID) REFERENCES ShippingAddresses(AddressID)
+);
+
+-- Create a table for order payments
+CREATE TABLE OrderPayments (
+    PaymentID INT PRIMARY KEY,
+    OrderID INT,
+    PaymentMethodID INT,
+    Amount DECIMAL(10, 2),
+    PaymentDate DATE,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (PaymentMethodID) REFERENCES PaymentMethods(PaymentMethodID)
+);
